@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import logo from "../app/FontAura-Logo.webp";
+import logo from "./FontAura-Logo.webp";
 import {
   RegExpMatcher,
   TextCensor,
@@ -91,7 +91,7 @@ export default function Home() {
       <div className="flex flex-col min-h-screen text-slate-50 px-6 overflow-clip">
         <header className="absolute top-0 z-10">
           <div className="py-3">
-            <Image src={logo} width={190} height={80} alt="FontAura Logo" />
+<img src="/FontAura-Logo.webp" width="200px" alt="Font Aura logo" />
           </div>
         </header>
 
