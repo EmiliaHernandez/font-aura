@@ -3,6 +3,11 @@ import axios from "axios";
 const GOOGLE_FONTS_API = "https://www.googleapis.com/webfonts/v1/webfonts";
 const API_KEY = process.env.GOOGLE_FONTS_API_KEY;
 
+export const config = {
+  runtime: "edge",
+  regions: ["iad1"],
+};
+
 export async function GET(request) {
   try {
     const response = await axios.get(`${GOOGLE_FONTS_API}?key=${API_KEY}`);
