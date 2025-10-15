@@ -1,8 +1,6 @@
 "use client";
 import { useState } from "react";
-import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import logo from "./FontAura-Logo.webp";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/next"
 import {
@@ -11,6 +9,7 @@ import {
   englishDataset,
   englishRecommendedTransformers,
 } from "obscenity";
+import Link from "next/link";
 
 export default function Home() {
   const [name, setName] = useState("");
@@ -61,12 +60,9 @@ export default function Home() {
     }
   };
 
-  // If no submission yet, show default “Font Aura is Arbutus”
   const displayName = submittedName || "Font Aura";
-  const displayFont = fontData?.font || "Arbutus";
- <><SpeedInsights/>
-<Analytics/>
-</>
+  const displayFont = fontData?.font || "Voltaire";
+
   return (
      
     <div className="min-h-screen bg-[#030014] relative overflow-hidden text-slate-50 font-[Eczar]">
@@ -100,6 +96,8 @@ export default function Home() {
         </header>
 
         <main className="flex-1 flex flex-col items-center justify-center px-6 md:px-12 lg:px-[50px]">
+          <SpeedInsights/>
+<Analytics/>
           <div className="w-full max-w-[900px] flex flex-col items-center gap-7 md:gap-8">
             <h1 className="text-center text-2xl md:text-3xl lg:text-[48px] lg:leading-[72px]">
               Type in your name and get the{" "}
@@ -167,7 +165,12 @@ export default function Home() {
         <hr className="border-slate-100" />
 
         <footer className="mt-auto py-4">
-          <h1 className="text-sm">Developed by Emilia Hernandez</h1>
+          <h1 className="text-sm">Developed by Emilia Hernandez | <span><Link
+          href="/privacy"
+          className="text-zip-blue hover:underline transition-colors"
+        >
+          Privacy Policy
+        </Link></span></h1> 
         </footer>
       </div>
     </div>
