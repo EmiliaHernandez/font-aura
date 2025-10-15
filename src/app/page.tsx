@@ -1,26 +1,49 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 import logo from "../app/FontAura-Logo.webp";
+import {
+  RegExpMatcher,
+  TextCensor,
+  englishDataset,
+  englishRecommendedTransformers,
+} from "obscenity";
 
 export default function Home() {
   const [name, setName] = useState("");
-  const [fontData, setFontData] = useState<{ font: string; file: string } | null>(null);
+  const [submittedName, setSubmittedName] = useState("");
+  const [fontData, setFontData] = useState<{ font: string; file: string }>({
+    font: "Arbutus",
+    file: "",
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const matcher = new RegExpMatcher({
+    ...englishDataset.build(),
+    ...englishRecommendedTransformers,
+  });
+  const censor = new TextCensor();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setFontData(null);
 
     if (!name.trim()) {
       setError("Please enter a name.");
       return;
     }
 
+    if (matcher.hasMatch(name)) {
+      setError("Inappropriate content detected. Please enter a different name.");
+      return;
+    }
+
     try {
       setLoading(true);
+
+      // 🔹 Don’t clear fontData here — keeps old display until new data arrives
       const res = await fetch(`/api/match?name=${encodeURIComponent(name)}`);
       const data = await res.json();
 
@@ -28,6 +51,7 @@ export default function Home() {
         setError(data.error);
       } else {
         setFontData({ font: data.font, file: data.file });
+        setSubmittedName(name);
       }
     } catch (err) {
       setError("Something went wrong. Please try again.");
@@ -36,13 +60,13 @@ export default function Home() {
     }
   };
 
+  // If no submission yet, show default “Font Aura is Arbutus”
+  const displayName = submittedName || "Font Aura";
   const displayFont = fontData?.font || "Arbutus";
-  const displayName = name || "FontAura";
 
   return (
     <div className="min-h-screen bg-[#030014] relative overflow-hidden text-slate-50 font-[Eczar]">
-
-
+            {/* Background letters (your decorative elements) */}
       <div className="absolute left-[-3%] top-[38%] text-[#ffffff12] text-[150px] md:text-[200px] lg:text-[300px] font-[Alkalami] pointer-events-none select-none">
         T
       </div>
@@ -64,9 +88,7 @@ export default function Home() {
       <div className="absolute right-[12%] bottom-[5%] text-[#ffffff12] text-[120px] md:text-[150px] lg:text-[200px] font-[Bokor] pointer-events-none select-none">
         F
       </div>
-
       <div className="flex flex-col min-h-screen text-slate-50 px-6 overflow-clip">
-
         <header className="absolute top-0 z-10">
           <div className="py-3">
             <Image src={logo} width={190} height={80} alt="FontAura Logo" />
@@ -112,18 +134,29 @@ export default function Home() {
                 rel="stylesheet"
               />
             )}
-            <p
-              className="text-4xl md:text-5xl mb-4 transition-all"
-              style={{ fontFamily: displayFont }}
-            >
-              {displayName}
-            </p>
-            <p>
-              is{" "}
-              <span className="font-semibold" style={{ fontFamily: displayFont }}>
-                {displayFont}
-              </span>
-            </p>
+
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={displayFont + displayName}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+              >
+                <p
+                  className="text-4xl md:text-5xl mb-4 transition-all"
+                  style={{ fontFamily: displayFont }}
+                >
+                  {displayName}
+                </p>
+                <p>
+                  is{" "}
+                  <span className="text-3xl" style={{ fontFamily: displayFont }}>
+                    {displayFont}
+                  </span>
+                </p>
+              </motion.div>
+            </AnimatePresence>
           </div>
         </main>
 
