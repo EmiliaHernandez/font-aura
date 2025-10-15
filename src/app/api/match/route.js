@@ -21,7 +21,7 @@ export async function GET(request) {
       return Response.json({ error: "Name is required" }, { status: 400 });
     }
 
-    const normalizedName = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const normalizedName = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replaceAll(" ", "");
 
     const response = await axios.get(`${GOOGLE_FONTS_API}?key=${API_KEY}`);
     const fonts = response.data.items;

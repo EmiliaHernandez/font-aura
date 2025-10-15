@@ -14,7 +14,7 @@ export default function Home() {
   const [name, setName] = useState("");
   const [submittedName, setSubmittedName] = useState("");
   const [fontData, setFontData] = useState<{ font: string; file: string }>({
-    font: "Arbutus",
+    font: "Voltaire",
     file: "",
   });
   const [loading, setLoading] = useState(false);
@@ -43,7 +43,6 @@ export default function Home() {
     try {
       setLoading(true);
 
-      // 🔹 Don’t clear fontData here — keeps old display until new data arrives
       const res = await fetch(`/api/match?name=${encodeURIComponent(name)}`);
       const data = await res.json();
 
@@ -115,7 +114,7 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={loading}
-                className="bg-[#2D9CFF] text-white px-5 py-2 rounded-4xl hover:bg-[#F4BB0E] hover:text-black transition disabled:opacity-60"
+                className="bg-[#2D9CFF] text-white px-5 py-2 rounded-4xl hover:bg-[#F4BB0E] hover:text-black transition disabled:opacity-60 mt-5 sm:mt-0"
               >
                 {loading ? "Matching..." : "Show me the font!"}
               </button>
@@ -124,7 +123,7 @@ export default function Home() {
             {error && <p className="text-red-600 mb-6">{error}</p>}
           </div>
 
-          <div className="text-center mt-6">
+          <div className="text-center mt-10">
             {fontData && (
               <link
                 href={`https://fonts.googleapis.com/css2?family=${fontData.font.replace(
