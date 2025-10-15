@@ -3,6 +3,8 @@ import { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import logo from "./FontAura-Logo.webp";
+import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@vercel/analytics/next"
 import {
   RegExpMatcher,
   TextCensor,
@@ -62,8 +64,11 @@ export default function Home() {
   // If no submission yet, show default “Font Aura is Arbutus”
   const displayName = submittedName || "Font Aura";
   const displayFont = fontData?.font || "Arbutus";
-
+ <><SpeedInsights/>
+<Analytics/>
+</>
   return (
+     
     <div className="min-h-screen bg-[#030014] relative overflow-hidden text-slate-50 font-[Eczar]">
             {/* Background letters (your decorative elements) */}
       <div className="absolute left-[-3%] top-[38%] text-[#ffffff12] text-[150px] md:text-[200px] lg:text-[300px] font-[Alkalami] pointer-events-none select-none">
