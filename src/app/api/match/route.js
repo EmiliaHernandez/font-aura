@@ -12,16 +12,19 @@ const hashMix = (n) => {
   return n >>> 0;
 };
 
-export async function GET(request) {
+export async function POST(request) {
   try {
-    const { searchParams } = new URL(request.url);
-    const name = searchParams.get("name");
+    const { name } = await request.json();
 
     if (!name) {
       return Response.json({ error: "Name is required" }, { status: 400 });
     }
 
-    const normalizedName = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replaceAll(" ", "");
+    // Normalize: remove accents, diacritics, and make lowercase
+    const normalizedName = name
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
 
     const response = await axios.get(`${GOOGLE_FONTS_API}?key=${API_KEY}`);
     const fonts = response.data.items;
@@ -32,16 +35,12 @@ export async function GET(request) {
       .reduce((a, b) => a + b, 0);
 
     let fontIndex = hashMix(sum) % (fontCount * 4);
-
-    while (fontIndex >= fontCount) {
-      fontIndex = Math.floor(fontIndex / 4);
-    }
+    while (fontIndex >= fontCount) fontIndex = Math.floor(fontIndex / 4);
 
     const matchedFont = fonts[fontIndex];
 
     return Response.json({
       name,
-      normalizedName,
       font: matchedFont.family,
       category: matchedFont.category,
       file:

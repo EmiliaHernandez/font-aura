@@ -44,8 +44,15 @@ export default function Home() {
     try {
       setLoading(true);
 
-      const res = await fetch(`/api/match?name=${encodeURIComponent(name)}`);
-      const data = await res.json();
+const res = await fetch("/api/match", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ name }),
+});
+
+if (!res.ok) throw new Error("Failed to fetch font match");
+const data = await res.json();
+
 
       if (data.error) {
         setError(data.error);
